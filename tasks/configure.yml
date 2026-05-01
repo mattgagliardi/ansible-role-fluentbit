@@ -1,0 +1,145 @@
+---
+# --- Linux configuration ---
+- name: Ensure Fluent Bit config directory exists (Linux)
+  ansible.builtin.file:
+    path: /etc/fluent-bit
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - fluentbit_configure
+
+- name: Ensure Fluent Bit buffer directory exists (Linux)
+  ansible.builtin.file:
+    path: "{{ fluentbit_buffer_path }}"
+    state: directory
+    mode: "0750"
+    owner: fluent-bit
+    group: fluent-bit
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit main config (Linux)
+  ansible.builtin.template:
+    src: fluent-bit.conf.j2
+    dest: /etc/fluent-bit/fluent-bit.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_os_family == 'RedHat'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit inputs config (Linux)
+  ansible.builtin.template:
+    src: fluent-bit-inputs.conf.j2
+    dest: /etc/fluent-bit/inputs.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_os_family == 'RedHat'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit filters config (Linux)
+  ansible.builtin.template:
+    src: fluent-bit-filters.conf.j2
+    dest: /etc/fluent-bit/filters.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_os_family == 'RedHat'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit outputs config (Linux)
+  ansible.builtin.template:
+    src: fluent-bit-outputs.conf.j2
+    dest: /etc/fluent-bit/outputs.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_os_family == 'RedHat'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit parsers config (Linux)
+  ansible.builtin.template:
+    src: fluent-bit-parsers.conf.j2
+    dest: /etc/fluent-bit/parsers.conf
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_os_family == 'RedHat'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+# --- Windows configuration ---
+- name: Ensure Fluent Bit conf directory exists (Windows)
+  ansible.windows.win_file:
+    path: "{{ fluentbit_windows_install_dir }}\\conf"
+    state: directory
+  when: ansible_os_family == 'Windows'
+  tags:
+    - fluentbit_configure
+
+- name: Ensure Fluent Bit buffer directory exists (Windows)
+  ansible.windows.win_file:
+    path: "{{ fluentbit_buffer_path }}"
+    state: directory
+  when: ansible_os_family == 'Windows'
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit main config (Windows)
+  ansible.windows.win_template:
+    src: fluent-bit.conf.j2
+    dest: "{{ fluentbit_windows_install_dir }}\\conf\\fluent-bit.conf"
+  when: ansible_os_family == 'Windows'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit inputs config (Windows)
+  ansible.windows.win_template:
+    src: fluent-bit-inputs.conf.j2
+    dest: "{{ fluentbit_windows_install_dir }}\\conf\\inputs.conf"
+  when: ansible_os_family == 'Windows'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit filters config (Windows)
+  ansible.windows.win_template:
+    src: fluent-bit-filters.conf.j2
+    dest: "{{ fluentbit_windows_install_dir }}\\conf\\filters.conf"
+  when: ansible_os_family == 'Windows'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit outputs config (Windows)
+  ansible.windows.win_template:
+    src: fluent-bit-outputs.conf.j2
+    dest: "{{ fluentbit_windows_install_dir }}\\conf\\outputs.conf"
+  when: ansible_os_family == 'Windows'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure
+
+- name: Deploy Fluent Bit parsers config (Windows)
+  ansible.windows.win_template:
+    src: fluent-bit-parsers.conf.j2
+    dest: "{{ fluentbit_windows_install_dir }}\\conf\\parsers.conf"
+  when: ansible_os_family == 'Windows'
+  notify: Restart fluent-bit
+  tags:
+    - fluentbit_configure

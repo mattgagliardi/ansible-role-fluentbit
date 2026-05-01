@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: fluentbit_config
+  author: mgagliardi
+  description: Installs and configures Fluent Bit on RHEL-family Linux and Windows with Loki output
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+    - name: Windows
+      versions:
+        - all
+  galaxy_tags:
+    - fluentbit
+    - logging
+    - loki
+    - observability
+
+dependencies: []

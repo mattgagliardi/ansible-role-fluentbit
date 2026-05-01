@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+[SERVICE]
+    Flush         {{ fluentbit_flush_interval }}
+    Log_Level     {{ fluentbit_service_log_level }}
+{% if ansible_os_family != 'Windows' %}
+    Parsers_File  /etc/fluent-bit/parsers.conf
+    storage.path  {{ fluentbit_buffer_path }}
+{% else %}
+    Parsers_File  {{ fluentbit_windows_install_dir }}\conf\parsers.conf
+    storage.path  {{ fluentbit_buffer_path }}
+{% endif %}
+    storage.sync              normal
+    storage.checksum          off
+    storage.backlog.mem_limit {{ fluentbit_buffer_backlog_mem_limit }}
+
+{% if ansible_os_family != 'Windows' %}
+@INCLUDE /etc/fluent-bit/inputs.conf
+@INCLUDE /etc/fluent-bit/filters.conf
+@INCLUDE /etc/fluent-bit/outputs.conf
+{% else %}
+@INCLUDE {{ fluentbit_windows_install_dir }}\conf\inputs.conf
+@INCLUDE {{ fluentbit_windows_install_dir }}\conf\filters.conf
+@INCLUDE {{ fluentbit_windows_install_dir }}\conf\outputs.conf
+{% endif %}

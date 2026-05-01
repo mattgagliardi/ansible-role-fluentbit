@@ -1,0 +1,6 @@
+---
+collections:
+  - name: community.docker
+  - name: ansible.posix
+  - name: ansible.windows
+    version: ">=2.0.0"

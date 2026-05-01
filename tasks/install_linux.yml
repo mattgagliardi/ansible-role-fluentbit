@@ -1,0 +1,54 @@
+---
+- name: Add Fluent Bit RPM repository
+  ansible.builtin.yum_repository:
+    name: fluent-bit
+    description: Fluent Bit official repository
+    baseurl: "{{ fluentbit_repo_baseurl }}"
+    gpgcheck: true
+    gpgkey: "{{ fluentbit_repo_gpgkey }}"
+    enabled: true
+  tags:
+    - fluentbit_install
+
+# When fluentbit_version is 'latest', state: latest handles upgrades natively
+# via the package module — no manual version check needed.
+- name: Gather installed package facts
+  ansible.builtin.package_facts:
+    manager: auto
+  tags:
+    - fluentbit_install
+
+- name: Set installed Fluent Bit version (if present)
+  ansible.builtin.set_fact:
+    fluentbit_installed_version: >-
+      {{ (ansible_facts.packages['fluent-bit'][0].version)
+         if ('fluent-bit' in ansible_facts.packages) else '' }}
+  tags:
+    - fluentbit_install
+
+- name: Install Fluent Bit package
+  ansible.builtin.package:
+    name: "{{ 'fluent-bit' if fluentbit_version == 'latest' else 'fluent-bit-' ~ fluentbit_version }}"
+    state: "{{ 'latest' if fluentbit_version == 'latest' else 'present' }}"
+  tags:
+    - fluentbit_install
+
+- name: Ensure fluent-bit group exists
+  ansible.builtin.group:
+    name: fluent-bit
+    system: true
+    state: present
+  tags:
+    - fluentbit_install
+
+- name: Ensure fluent-bit user exists
+  ansible.builtin.user:
+    name: fluent-bit
+    group: fluent-bit
+    system: true
+    shell: /sbin/nologin
+    home: /var/lib/fluent-bit
+    create_home: false
+    state: present
+  tags:
+    - fluentbit_install

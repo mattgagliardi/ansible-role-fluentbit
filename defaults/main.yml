@@ -1,0 +1,95 @@
+---
+# Fluent Bit Ansible Role — defaults/main.yml
+# All variables are documented inline. See data-model.md for full schema.
+
+# --- Installation ---
+
+# Package version to install. "latest" resolves to the newest stable release.
+# Pin to a specific version (e.g., "3.2.0") to lock.
+fluentbit_version: "latest"
+
+# --- Log Inputs ---
+
+# List of log input path definitions. Each entry is independently configured
+# with its own parser, severity field, and minimum severity level.
+# Required fields per entry: path, tag
+# Optional fields: parser (default: syslog-rfc3164), severity_field (default: severity),
+#                  min_severity (default: warn), multiline (default: false),
+#                  multiline_parser (default: "")
+#
+# Example:
+#   fluentbit_inputs:
+#     - path: /var/log/myapp/*.log
+#       tag: myapp
+#       parser: json
+#       severity_field: level
+#       min_severity: warn
+fluentbit_inputs: []
+# --- Loki Output ---
+
+# Loki hostname or IP. REQUIRED — role fails pre-flight if empty.
+fluentbit_loki_host: ""
+
+# Loki HTTP port.
+fluentbit_loki_port: 3100
+
+# Static label set applied to all log streams (Loki label selector string).
+fluentbit_loki_labels: "job=fluentbit"
+
+# Loki tenant ID (X-Scope-OrgID header). Leave empty for single-tenant Loki.
+fluentbit_loki_tenant_id: ""
+
+# --- Filesystem Buffer ---
+
+# Path where Fluent Bit stores buffered chunks during Loki outage.
+# Created by the role on the target host.
+fluentbit_buffer_path: >-
+  {{ '/var/lib/fluent-bit/buffer'
+     if ansible_os_family != 'Windows'
+     else 'C:\\fluent-bit\\buffer' }}
+
+# Maximum total disk space for the buffer. Accepts Fluent Bit size notation.
+fluentbit_buffer_total_limit: "1G"
+
+# Maximum memory for backlog chunks pending flush (storage.backlog.mem_limit).
+fluentbit_buffer_backlog_mem_limit: "5M"
+
+# --- Service ---
+
+# Fluent Bit internal log level (debug, info, warn, error).
+fluentbit_service_log_level: "info"
+
+# Seconds between Fluent Bit flush cycles.
+fluentbit_flush_interval: 5
+
+# --- Repository (Linux) ---
+
+# Base URL for the Fluent Bit RPM repository. Override to point to a local mirror.
+fluentbit_repo_baseurl: "https://packages.fluentbit.io/almalinux/$releasever/"
+
+# GPG key URL for the Fluent Bit RPM repo.
+fluentbit_repo_gpgkey: "https://packages.fluentbit.io/fluentbit.key"
+
+# --- Windows Installer ---
+
+# Override EXE download URL. If empty, the role constructs from fluentbit_version.
+# Useful for air-gapped environments.
+fluentbit_windows_installer_url: ""
+
+# Installation directory on Windows targets.
+fluentbit_windows_install_dir: "C:\\fluent-bit"
+
+# --- Custom Parsers ---
+
+# Additional parser definitions appended to parsers.conf.
+# Each entry requires: name, format
+# Optional: regex (when format=regex), time_key, time_format
+#
+# Example:
+#   fluentbit_custom_parsers:
+#     - name: nginx
+#       format: regex
+#       regex: '^(?<remote>[^ ]*)...'
+#       time_key: time
+#       time_format: "%d/%b/%Y:%H:%M:%S %z"
+fluentbit_custom_parsers: []

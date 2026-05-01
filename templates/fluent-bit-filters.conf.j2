@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+{% set severity_order = ['debug', 'info', 'warn', 'error', 'critical'] %}
+{% for input in fluentbit_inputs %}
+{% set min_idx = severity_order.index(input.min_severity | default('warn')) %}
+{% set levels = severity_order[min_idx:] | join('|') %}
+[FILTER]
+    Name   grep
+    Match  {{ input.tag }}
+    Regex  {{ input.severity_field | default('severity') }} ^({{ levels }})$
+
+{% endfor %}

@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+[OUTPUT]
+    Name                   loki
+    Match                  *
+    host                   {{ fluentbit_loki_host }}
+    port                   {{ fluentbit_loki_port }}
+    labels                 {{ fluentbit_loki_labels }}
+{% if fluentbit_loki_tenant_id | length > 0 %}
+    tenant_id              {{ fluentbit_loki_tenant_id }}
+{% endif %}
+    storage.total_limit_size {{ fluentbit_buffer_total_limit }}

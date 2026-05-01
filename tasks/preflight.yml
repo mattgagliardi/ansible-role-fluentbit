@@ -1,0 +1,31 @@
+---
+# Preflight validation — runs before any install or configuration tasks.
+# Fails fast with a clear message if required variables are missing.
+
+- name: Validate fluentbit_loki_host is set
+  ansible.builtin.fail:
+    msg: "fluentbit_loki_host is required and must be a non-empty string"
+  when: fluentbit_loki_host is not defined or fluentbit_loki_host | length == 0
+
+- name: Validate fluentbit_inputs is a non-empty list
+  ansible.builtin.fail:
+    msg: "fluentbit_inputs must be a non-empty list of input path definitions"
+  when: fluentbit_inputs is not defined or fluentbit_inputs | length == 0
+
+- name: Validate each input has a path
+  ansible.builtin.fail:
+    msg: "fluentbit_inputs entry {{ idx }} is missing required field: path"
+  when: item.path is not defined or item.path | length == 0
+  loop: "{{ fluentbit_inputs }}"
+  loop_control:
+    index_var: idx
+    label: "input[{{ idx }}]"
+
+- name: Validate each input has a tag
+  ansible.builtin.fail:
+    msg: "fluentbit_inputs entry {{ idx }} is missing required field: tag"
+  when: item.tag is not defined or item.tag | length == 0
+  loop: "{{ fluentbit_inputs }}"
+  loop_control:
+    index_var: idx
+    label: "input[{{ idx }}]"

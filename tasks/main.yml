@@ -1,0 +1,25 @@
+---
+- name: Run preflight validation
+  ansible.builtin.include_tasks: preflight.yml
+
+- name: Install Fluent Bit on RHEL-family Linux
+  ansible.builtin.include_tasks: install_linux.yml
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - fluentbit_install
+
+- name: Install Fluent Bit on Windows
+  ansible.builtin.include_tasks: install_windows.yml
+  when: ansible_os_family == 'Windows'
+  tags:
+    - fluentbit_install
+
+- name: Configure Fluent Bit
+  ansible.builtin.include_tasks: configure.yml
+  tags:
+    - fluentbit_configure
+
+- name: Manage Fluent Bit service
+  ansible.builtin.include_tasks: service.yml
+  tags:
+    - fluentbit_service

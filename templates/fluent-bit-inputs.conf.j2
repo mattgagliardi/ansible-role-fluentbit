@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+{% for input in fluentbit_inputs %}
+[INPUT]
+    Name          tail
+    Path          {{ input.path }}
+    Tag           {{ input.tag }}
+    Parser        {{ input.parser | default('syslog-rfc3164') }}
+    storage.type  filesystem
+{% if input.multiline | default(false) %}
+    multiline.parser {{ input.multiline_parser }}
+{% endif %}
+
+{% endfor %}

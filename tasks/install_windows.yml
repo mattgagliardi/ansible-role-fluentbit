@@ -1,0 +1,35 @@
+---
+- name: Check if Fluent Bit is already installed (Windows)
+  ansible.builtin.stat:
+    path: "{{ fluentbit_windows_install_dir }}\\bin\\fluent-bit.exe"
+  register: fluentbit_win_stat
+  tags:
+    - fluentbit_install
+
+- name: Set Windows installer URL
+  ansible.builtin.set_fact:
+    _fluentbit_installer_url: >-
+      {{ fluentbit_windows_installer_url
+         if fluentbit_windows_installer_url | length > 0
+         else 'https://releases.fluentbit.io/' ~ fluentbit_version ~ '/fluent-bit-' ~ fluentbit_version ~ '-win64.exe' }}
+  when: not fluentbit_win_stat.stat.exists
+  tags:
+    - fluentbit_install
+
+- name: Download Fluent Bit installer (Windows)
+  ansible.builtin.get_url:
+    url: "{{ _fluentbit_installer_url }}"
+    dest: "{{ ansible_env.TEMP }}\\fluent-bit-installer.exe"
+    mode: "0755"
+  when: not fluentbit_win_stat.stat.exists
+  register: fluentbit_win_download
+  tags:
+    - fluentbit_install
+
+- name: Install Fluent Bit silently (Windows)
+  ansible.builtin.command:
+    cmd: "{{ ansible_env.TEMP }}\\fluent-bit-installer.exe /S /D={{ fluentbit_windows_install_dir }}"
+  when: not fluentbit_win_stat.stat.exists
+  changed_when: not fluentbit_win_stat.stat.exists
+  tags:
+    - fluentbit_install
