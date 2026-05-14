@@ -4,6 +4,8 @@
     Match                  *
     host                   {{ fluentbit_loki_host }}
     port                   {{ fluentbit_loki_port }}
+    tls                    {{ fluentbit_loki_tls }}
+    tls.verify             {{ fluentbit_loki_tls_verify }}
     labels                 {{ fluentbit_loki_labels }}
 {% if fluentbit_loki_tenant_id | length > 0 %}
     tenant_id              {{ fluentbit_loki_tenant_id }}
