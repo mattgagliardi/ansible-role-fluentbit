@@ -20,7 +20,6 @@
   ansible.windows.win_get_url:
     url: "{{ _fluentbit_installer_url }}"
     dest: "{{ ansible_env.TEMP }}\\fluent-bit-installer.exe"
-    mode: "0755"
   when: not fluentbit_win_stat.stat.exists
   register: fluentbit_win_download
   tags:
