@@ -3,3 +3,10 @@
   ansible.builtin.service:
     name: fluent-bit
     state: restarted
+  when: ansible_os_family == 'RedHat'
+
+- name: Restart fluent-bit
+  ansible.windows.win_service:
+    name: fluent-bit
+    state: restarted
+  when: ansible_os_family == 'Windows'
