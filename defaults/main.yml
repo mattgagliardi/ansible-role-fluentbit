@@ -83,7 +83,7 @@ fluentbit_repo_gpgkey: "https://packages.fluentbit.io/fluentbit.key"
 fluentbit_windows_installer_url: ""
 
 # Installation directory on Windows targets.
-fluentbit_windows_install_dir: "C:\\fluent-bit"
+fluentbit_windows_install_dir: "C:\\Program Files\\fluent-bit"
 
 # --- Custom Parsers ---
 

@@ -10,9 +10,13 @@
 
 - name: Ensure Fluent Bit service is started and enabled (Windows)
   ansible.windows.win_service:
+    description: Fluent Bit Service
+    display_name: FluentBit
     name: fluent-bit
+    path: "{{ fluentbit_windows_install_dir }}\\bin\\fluent-bit.exe"
     state: started
     start_mode: auto
+    username: "LocalService"
   when: ansible_os_family == 'Windows'
   tags:
     - fluentbit_service
