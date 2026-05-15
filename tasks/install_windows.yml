@@ -17,7 +17,7 @@
     - fluentbit_install
 
 - name: Download Fluent Bit installer (Windows)
-  ansible.builtin.get_url:
+  ansible.windows.win_get_url:
     url: "{{ _fluentbit_installer_url }}"
     dest: "{{ ansible_env.TEMP }}\\fluent-bit-installer.exe"
     mode: "0755"
@@ -27,7 +27,7 @@
     - fluentbit_install
 
 - name: Install Fluent Bit silently (Windows)
-  ansible.builtin.command:
+  ansible.windows.win_command:
     cmd: "{{ ansible_env.TEMP }}\\fluent-bit-installer.exe /S /D={{ fluentbit_windows_install_dir }}"
   when: not fluentbit_win_stat.stat.exists
   changed_when: not fluentbit_win_stat.stat.exists
