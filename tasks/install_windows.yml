@@ -11,7 +11,7 @@
     _fluentbit_installer_url: >-
       {{ fluentbit_windows_installer_url
          if fluentbit_windows_installer_url | length > 0
-         else 'https://packages.fluentbit.io/' ~ fluentbit_version ~ '/fluent-bit-' ~ fluentbit_version ~ '-win64.exe' }}
+         else 'https://packages.fluentbit.io/' ~ 'windows' ~ '/fluent-bit-' ~ fluentbit_version ~ '-win64.exe' }}
   when: not fluentbit_win_stat.stat.exists
   tags:
     - fluentbit_install
