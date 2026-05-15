@@ -1,6 +1,6 @@
 ---
 - name: Check if Fluent Bit is already installed (Windows)
-  ansible.builtin.stat:
+  ansible.windows.win_stat:
     path: "{{ fluentbit_windows_install_dir }}\\bin\\fluent-bit.exe"
   register: fluentbit_win_stat
   tags:
