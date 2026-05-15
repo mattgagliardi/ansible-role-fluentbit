@@ -9,10 +9,10 @@
     - fluentbit_service
 
 - name: Ensure Fluent Bit service is started and enabled (Windows)
-  ansible.builtin.service:
+  ansible.windows.win_service:
     name: fluent-bit
     state: started
-    enabled: true
+    start_mode: auto
   when: ansible_os_family == 'Windows'
   tags:
     - fluentbit_service
