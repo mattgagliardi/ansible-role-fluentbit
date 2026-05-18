@@ -9,13 +9,13 @@
 
 - name: Validate fluentbit_inputs is a non-empty list
   ansible.builtin.fail:
-    msg: "fluentbit_inputs must be a non-empty list of input path definitions"
+    msg: "fluentbit_inputs must be a non-empty list of input definitions"
   when: fluentbit_inputs is not defined or fluentbit_inputs | length == 0
 
-- name: Validate each input has a path
+- name: Validate each input has a supported type
   ansible.builtin.fail:
-    msg: "fluentbit_inputs entry {{ idx }} is missing required field: path"
-  when: item.path is not defined or item.path | length == 0
+    msg: "fluentbit_inputs entry {{ idx }} has invalid type '{{ item.type | default('tail') }}'; supported types are: tail, winlog"
+  when: (item.type | default('tail')) not in ['tail', 'winlog']
   loop: "{{ fluentbit_inputs }}"
   loop_control:
     index_var: idx
@@ -25,6 +25,39 @@
   ansible.builtin.fail:
     msg: "fluentbit_inputs entry {{ idx }} is missing required field: tag"
   when: item.tag is not defined or item.tag | length == 0
+  loop: "{{ fluentbit_inputs }}"
+  loop_control:
+    index_var: idx
+    label: "input[{{ idx }}]"
+
+- name: Validate tail input has a path
+  ansible.builtin.fail:
+    msg: "fluentbit_inputs entry {{ idx }} with type 'tail' is missing required field: path"
+  when:
+    - (item.type | default('tail')) == 'tail'
+    - item.path is not defined or item.path | length == 0
+  loop: "{{ fluentbit_inputs }}"
+  loop_control:
+    index_var: idx
+    label: "input[{{ idx }}]"
+
+- name: Validate winlog input has channels
+  ansible.builtin.fail:
+    msg: "fluentbit_inputs entry {{ idx }} with type 'winlog' must define channels as a non-empty list"
+  when:
+    - (item.type | default('tail')) == 'winlog'
+    - item.channels is not defined or item.channels is string or item.channels | length == 0
+  loop: "{{ fluentbit_inputs }}"
+  loop_control:
+    index_var: idx
+    label: "input[{{ idx }}]"
+
+- name: Validate winlog input has db path
+  ansible.builtin.fail:
+    msg: "fluentbit_inputs entry {{ idx }} with type 'winlog' is missing required field: db"
+  when:
+    - (item.type | default('tail')) == 'winlog'
+    - item.db is not defined or item.db | length == 0
   loop: "{{ fluentbit_inputs }}"
   loop_control:
     index_var: idx

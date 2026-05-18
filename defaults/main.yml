@@ -52,7 +52,7 @@ fluentbit_loki_tenant_id: ""
 fluentbit_buffer_path: >-
   {{ '/var/lib/fluent-bit/buffer'
      if ansible_os_family != 'Windows'
-     else 'C:\\fluent-bit\\buffer' }}
+     else 'C:\\ProgramData\\fluent-bit\\buffer' }}
 
 # Maximum total disk space for the buffer. Accepts Fluent Bit size notation.
 fluentbit_buffer_total_limit: "1G"

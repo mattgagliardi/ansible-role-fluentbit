@@ -55,7 +55,7 @@ roles:
 | `fluentbit_repo_baseurl` | `"https://packages.fluentbit.io/..."` | Override RPM repo URL |
 | `fluentbit_repo_gpgkey` | `"https://packages.fluentbit.io/fluentbit.key"` | RPM repo GPG key |
 | `fluentbit_windows_installer_url` | `""` | Override EXE download URL |
-| `fluentbit_windows_install_dir` | `C:\fluent-bit` | Windows install directory |
+| `fluentbit_windows_install_dir` | `C:\Program Files\fluent-bit` | Windows install directory |
 | `fluentbit_custom_parsers` | `[]` | Custom parser definitions |
 
 ### Input Path Definition

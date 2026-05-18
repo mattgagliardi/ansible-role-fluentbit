@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 {% for input in fluentbit_inputs %}
+{% if input.type | default('tail') == 'tail' %}
 [INPUT]
     Name          tail
     Path          {{ input.path }}
@@ -9,5 +10,13 @@
 {% if input.multiline | default(false) %}
     multiline.parser {{ input.multiline_parser }}
 {% endif %}
+{% elif input.type == 'winlog' %}
+[INPUT]
+    Name         winlog
+    Channels     {{ input.channels | join(',') }}
+    Tag          {{ input.tag }}
+    Interval_Sec {{ input.interval_sec | default(1) }}
+    DB           {{ fluentbit_buffer_path }}\\{{ input.db }}
+{% endif %} 
 
 {% endfor %}
