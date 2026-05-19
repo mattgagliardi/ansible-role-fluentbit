@@ -16,7 +16,7 @@
     Channels     {{ input.channels | join(',') }}
     Tag          {{ input.tag }}
     Interval_Sec {{ input.interval_sec | default(1) }}
-    DB           {{ fluentbit_buffer_path }}\\{{ input.db }}
+    DB           {{ fluentbit_buffer_path }}\{{ input.db }}
 {% endif %}
 
 {% endfor %}
