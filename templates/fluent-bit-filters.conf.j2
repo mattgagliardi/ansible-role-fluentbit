@@ -1,11 +1,28 @@
 # {{ ansible_managed }}
 {% set severity_order = ['debug', 'info', 'warn', 'error', 'critical'] %}
+{% set winlog_severity_map = {
+    'debug': ['Verbose', 'Information', 'Informational', 'Warning', 'Error', 'Critical'],
+    'info': ['Information', 'Informational', 'Warning', 'Error', 'Critical'],
+    'warn': ['Warning', 'Error', 'Critical'],
+    'error': ['Error', 'Critical'],
+    'critical': ['Critical']
+} %}
 {% for input in fluentbit_inputs %}
-{% set min_idx = severity_order.index(input.min_severity | default('warn')) %}
+{% set min_severity = input.min_severity | default('warn') | lower %}
+{% if min_severity not in severity_order %}
+{% set min_severity = 'warn' %}
+{% endif %}
+{% if input.type | default('tail') == 'winlog' %}
+{% set levels = winlog_severity_map[min_severity] | join('|') %}
+{% set severity_field = input.severity_field | default('Level') %}
+{% else %}
+{% set min_idx = severity_order.index(min_severity) %}
 {% set levels = severity_order[min_idx:] | join('|') %}
+{% set severity_field = input.severity_field | default('severity') %}
+{% endif %}
 [FILTER]
     Name   grep
     Match  {{ input.tag }}
-    Regex  {{ input.severity_field | default('severity') }} ^({{ levels }})$
+    Regex  {{ severity_field }} ^({{ levels }})$
 
 {% endfor %}
