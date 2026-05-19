@@ -13,7 +13,7 @@
     description: Fluent Bit Service
     display_name: FluentBit
     name: fluent-bit
-    path: "{{ fluentbit_windows_install_dir }}\\bin\\fluent-bit.exe -c {{ fluentbit_windows_install_dir }}\\conf\\fluent-bit.conf"
+    path: "{{ fluentbit_windows_install_dir }}\\bin\\fluent-bit.exe -c \"{{ fluentbit_windows_install_dir }}\\conf\\fluent-bit.conf\""
     state: started
     start_mode: auto
     username: "LocalService"
