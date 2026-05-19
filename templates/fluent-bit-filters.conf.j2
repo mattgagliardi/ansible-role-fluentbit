@@ -14,7 +14,7 @@
 {% endif %}
 {% if input.type | default('tail') == 'winlog' %}
 {% set levels = winlog_severity_map[min_severity] | join('|') %}
-{% set severity_field = input.severity_field | default('Level') %}
+{% set severity_field = input.severity_field | default('EventType') %}
 {% else %}
 {% set min_idx = severity_order.index(min_severity) %}
 {% set levels = severity_order[min_idx:] | join('|') %}
