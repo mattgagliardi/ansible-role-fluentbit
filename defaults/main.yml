@@ -33,11 +33,11 @@ fluentbit_loki_host: ""
 # Loki HTTP port. Default 443 for Traefik TLS termination.
 fluentbit_loki_port: 443
 
-# Enable TLS for the Loki output connection (on/off).
+# Loki uses HTTPS if true, HTTP if false.
 fluentbit_loki_tls: "on"
 
-# Skip TLS certificate verification (on/off). Use "on" for self-signed certs.
-fluentbit_loki_tls_verify: "on"
+# Whether to verify Loki's TLS certificate.
+fluentbit_loki_tls_verify: "off"
 
 # Static label set applied to all log streams (Loki label selector string).
 fluentbit_loki_labels: "job=fluentbit"

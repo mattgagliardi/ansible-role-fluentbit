@@ -45,6 +45,8 @@ roles:
 | `fluentbit_inputs` | `[]` | **Required.** List of log input path definitions |
 | `fluentbit_loki_host` | `""` | **Required.** Loki hostname or IP |
 | `fluentbit_loki_port` | `3100` | Loki HTTP port |
+| `fluentbit_loki_tls` | `on` | Use HTTPS to Loki (`on`/`off`) |
+| `fluentbit_loki_tls_verify` | `off` | Verify Loki's TLS certificate |
 | `fluentbit_loki_labels` | `"job=fluentbit"` | Static labels for all log streams |
 | `fluentbit_loki_tenant_id` | `""` | Loki tenant ID (leave empty for single-tenant) |
 | `fluentbit_buffer_path` | `/var/lib/fluent-bit/buffer` (Linux) | Filesystem buffer directory |
